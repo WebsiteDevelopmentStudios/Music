@@ -32,7 +32,7 @@ public final class MusicPlugin extends JavaPlugin implements TabExecutor {
         if (!new File(folder, "README.txt").exists()) {
             try (var out = new java.io.FileWriter(new File(folder, "README.txt"))) {
                 out.write("Put .ogg audio files here, then run /music reload. Filenames become track IDs.\n" +
-                    "An .obb is an Android expansion archive, not an audio format; extract usable .ogg tracks first.\n");
+                    "The Java and Bedrock resource packs are exported into the parent Music folder.\n");
             } catch (Exception ex) { getLogger().warning("Could not write music folder README: " + ex.getMessage()); }
         }
         Objects.requireNonNull(getCommand("music")).setExecutor(this);
