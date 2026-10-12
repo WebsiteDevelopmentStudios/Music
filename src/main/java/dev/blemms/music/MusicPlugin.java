@@ -106,7 +106,7 @@ public final class MusicPlugin extends JavaPlugin implements TabExecutor {
                 String sound = "blemmsmusic:music." + canonical.toLowerCase(Locale.ROOT);
                 float volume = (float) Math.max(0.0, Math.min(16.0,
                     getConfig().getDouble("volume", 1.0) * getConfig().getDouble("sound-volume", 1.0)));
-                target.playSound(target.getLocation(), sound, SoundCategory.RECORDS, volume, 1.0f);
+                target.getWorld().playSound(target.getLocation(), sound, SoundCategory.RECORDS, volume, 1.0f);
                 sender.sendMessage(PREFIX + "Playing " + ChatColor.AQUA + canonical + ChatColor.GRAY + " for " + target.getName() + ".");
                 return true;
             }
@@ -118,7 +118,7 @@ public final class MusicPlugin extends JavaPlugin implements TabExecutor {
                 } else if (sender instanceof Player p) {
                     if (!allowed(p)) return true; target = p;
                 } else { sender.sendMessage(PREFIX + "Console usage: /music stop <player>"); return true; }
-                for (String name : tracks.keySet()) target.stopSound("blemmsmusic:music." + name.toLowerCase(Locale.ROOT), SoundCategory.RECORDS);
+                for (Player nearby : target.getWorld().getPlayers()) {\n                    if (nearby.getLocation().distanceSquared(target.getLocation()) <= 100.0) {\n                        for (String name : tracks.keySet()) nearby.stopSound("blemmsmusic:music." + name.toLowerCase(Locale.ROOT), SoundCategory.RECORDS);\n                    }\n                }
                 target.sendMessage(PREFIX + "Stopped custom music.");
                 if (sender != target) sender.sendMessage(PREFIX + "Stopped music for " + target.getName() + ".");
                 return true;
