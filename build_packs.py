@@ -3,6 +3,7 @@
 import json
 import shutil
 import zipfile
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -22,6 +23,7 @@ JAVA_SOUNDS.mkdir(parents=True, exist_ok=True)
 # The first locations support local development; the plugin data folder is
 # also checked when the project is built from a server root.
 source_dirs = [
+    Path(os.environ["MUSIC_SOURCE_DIR"]).expanduser() if os.environ.get("MUSIC_SOURCE_DIR") else ROOT / "__no_music_source__",
     ROOT / "music",
     ROOT / "plugins" / "Music" / "music",
     ROOT / "src" / "pack" / "assets" / "blemmsmusic" / "sounds" / "music",
