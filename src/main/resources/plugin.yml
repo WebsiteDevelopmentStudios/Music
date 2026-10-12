@@ -1,0 +1,17 @@
+name: Music
+version: 1.0.0
+main: dev.blemms.music.MusicPlugin
+api-version: '26.2'
+author: WebsiteDevelopmentStudios
+description: Custom music playback with Java and Geyser resource-pack exports.
+softdepend: [Geyser-Spigot, Floodgate]
+commands:
+  music:
+    description: Manage custom server music.
+    usage: "/music <list|play|stop|reload|admin|disable>"
+    aliases: [mus]
+permissions:
+  music.use:
+    default: true
+  music.admin:
+    default: op
