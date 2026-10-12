@@ -15,8 +15,18 @@ jobs:
           distribution: temurin
           java-version: '25'
           cache: maven
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
       - name: Build plugin and resource packs
         run: mvn -B -U clean package
+      - name: Verify generated outputs
+        run: |
+          test -s target/Music.jar
+          test -s target/Music-Java-Resource-Pack.zip
+          test -s target/Music-Geyser.mcpack
+          unzip -t target/Music-Java-Resource-Pack.zip
+          unzip -t target/Music-Geyser.mcpack
       - name: Upload JAR and resource packs
         uses: actions/upload-artifact@v4
         with:
