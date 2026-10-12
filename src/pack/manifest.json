@@ -1,0 +1,17 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Music Plugin Tracks",
+    "description": "Custom tracks exported for Bedrock clients through Geyser",
+    "uuid": "d4cbeef0-3a20-4a12-96ab-6d2ef56f4d11",
+    "version": [1, 0, 0],
+    "min_engine_version": [1, 20, 0]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "8fcb22a4-82f7-4b3f-9c7b-bd251d5e24a1",
+      "version": [1, 0, 0]
+    }
+  ]
+}
