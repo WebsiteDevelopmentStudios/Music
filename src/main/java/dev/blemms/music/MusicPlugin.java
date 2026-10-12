@@ -166,7 +166,7 @@ public final class MusicPlugin extends JavaPlugin implements TabExecutor {
                 String sound = "blemmsmusic:music." + canonical.toLowerCase(Locale.ROOT);
                 float volume = (float) Math.max(0.0, Math.min(16.0,
                     getConfig().getDouble("volume", 1.0) * getConfig().getDouble("sound-volume", 1.0)));
-                target.getWorld().playSound(target.getLocation(), sound, SoundCategory.RECORDS, volume, 1.0f);
+                target.getWorld().playSound(target.getLocation(), sound, SoundCategory.RECORD, volume, 1.0f);
                 sender.sendMessage(PREFIX + "Playing " + ChatColor.AQUA + canonical + ChatColor.GRAY + " for " + target.getName() + ".");
                 return true;
             }
@@ -181,7 +181,7 @@ public final class MusicPlugin extends JavaPlugin implements TabExecutor {
                 for (Player nearby : target.getWorld().getPlayers()) {
                     if (nearby.getLocation().distanceSquared(target.getLocation()) <= 100.0) {
                         for (String name : tracks.keySet()) {
-                            nearby.stopSound("blemmsmusic:music." + name.toLowerCase(Locale.ROOT), SoundCategory.RECORDS);
+                            nearby.stopSound("blemmsmusic:music." + name.toLowerCase(Locale.ROOT), SoundCategory.RECORD);
                         }
                     }
                 }
