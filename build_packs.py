@@ -15,6 +15,8 @@ for path in (JAVA, BEDROCK):
     if path.exists():
         shutil.rmtree(path)
 JAVA_ASSETS.mkdir(parents=True, exist_ok=True)
+JAVA_SOUNDS = JAVA_ASSETS / "sounds" / "music"
+JAVA_SOUNDS.mkdir(parents=True, exist_ok=True)
 (BEDROCK_SOUNDS / "music").mkdir(parents=True, exist_ok=True)
 
 # The first locations support local development; the plugin data folder is
@@ -45,7 +47,7 @@ for track_id, source in sorted(tracks.items()):
         "max_distance": 10,
         "sounds": [{"name": f"sounds/music/{track_id}", "stream": True}]
     }
-    shutil.copy2(source, JAVA_ASSETS / "sounds" / "music" / f"{track_id}.ogg")
+    shutil.copy2(source, JAVA_SOUNDS / f"{track_id}.ogg")
     shutil.copy2(source, BEDROCK_SOUNDS / "music" / f"{track_id}.ogg")
 
 # Java pack: correct Java-only metadata and sound registry.
