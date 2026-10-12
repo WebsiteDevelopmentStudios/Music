@@ -1,0 +1,13 @@
+# Place .ogg audio files in plugins/Music/music/
+# OGG Vorbis is recommended for Minecraft custom sounds. An .obb is an Android expansion archive, not an audio file;
+# extract supported .ogg tracks from it first. This plugin does not unpack proprietary OBB archives.
+volume: 1.0
+# Per-player playback volume multiplier (0.0 - 1.0); final sound volume is clamped to Minecraft's 0-16 range.
+max-volume: 1.0
+banned-players: []
+# Worlds in this list cannot use music commands. Also changeable with /music disable <world>.
+disabled-worlds: []
+# Sound distance attenuation; 16 is the Minecraft sound volume cap.
+sound-volume: 1.0
+# Resource pack metadata version for Minecraft 1.21+; adjust if your target client requires a different pack format.
+pack-format:  resource-pack
