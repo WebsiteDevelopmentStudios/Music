@@ -99,13 +99,49 @@ public final class MusicPlugin extends JavaPlugin implements TabExecutor {
     private void scanTracks() {
         tracks.clear();
         File folder = new File(getDataFolder(), "music");
-        File[] files = folder.listFiles((dir, name) -> name.toLowerCase(Locale.ROOT).endsWith(".ogg"));
-        if (files == null) return;
-        for (File file : files) {
-            String id = file.getName().substring(0, file.getName().length() - 4);
-            if (id.matches("[A-Za-z0-9_-]+")) tracks.put(id, file.getName());
-            else getLogger().warning("Skipping unsupported track filename (use letters, digits, _ or -): " + file.getName());
+        getLogger().info("Scanning for OGG tracks in: " + folder.getAbsolutePath());
+
+        if (!folder.isDirectory()) {
+            if (!folder.mkdirs()) {
+                getLogger().warning("Music folder does not exist and could not be created: " + folder.getAbsolutePath());
+                return;
+            }
         }
+
+        int discovered = 0;
+        try (var paths = Files.walk(folder.toPath())) {
+            for (File file : paths.filter(Files::isRegularFile)
+                    .map(java.nio.file.Path::toFile)
+                    .filter(f -> f.getName().toLowerCase(Locale.ROOT).endsWith(".ogg"))
+                    .sorted(Comparator.comparing(File::getAbsolutePath, String.CASE_INSENSITIVE_ORDER))
+                    .toList()) {
+                discovered++;
+                String relativePath = folder.toPath().relativize(file.toPath()).toString();
+                String filename = file.getName();
+                String stem = filename.substring(0, filename.length() - 4);
+                String id = stem.replaceAll("[^A-Za-z0-9_-]", "_").replaceAll("_+", "_");
+                if (id.isBlank() || id.matches("_+")) {
+                    getLogger().warning("Skipping OGG with no usable track name: " + relativePath);
+                    continue;
+                }
+                if (tracks.containsKey(id)) {
+                    getLogger().warning("Skipping duplicate track ID '" + id + "' from " + relativePath
+                            + "; another file already uses that ID.");
+                    continue;
+                }
+                // Store the relative path so tracks in subfolders can also be read when packs are generated.
+                tracks.put(id, relativePath);
+                if (!stem.equals(id)) {
+                    getLogger().info("Track '" + relativePath + "' registered as '" + id + "'.");
+                }
+            }
+        } catch (IOException ex) {
+            getLogger().warning("Could not scan music folder " + folder.getAbsolutePath() + ": " + ex.getMessage());
+            return;
+        }
+
+        getLogger().info("OGG scan complete: discovered " + discovered + " OGG file(s), registered "
+                + tracks.size() + " track(s).");
     }
 
     private boolean isBanned(Player player) {
