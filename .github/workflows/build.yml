@@ -1,0 +1,27 @@
+name: Build Music Plugin
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - name: Build plugin and resource packs
+        run: mvn -B -U clean package
+      - name: Upload JAR and resource packs
+        uses: actions/upload-artifact@v4
+        with:
+          name: Music-build
+          path: |
+            target/Music.jar
+            target/Music-Java-Resource-Pack.zip
+            target/Music-Geyser.mcpack
