@@ -55,8 +55,8 @@ for track_id, source in sorted(tracks.items()):
 # Java pack: correct Java-only metadata and sound registry.
 (JAVA / "pack.mcmeta").write_text(json.dumps({
     "pack": {"pack_format": 75, "description": "Music plugin tracks (10 block range)"}
-}, indent=2) + "\\n", encoding="utf-8")
-(JAVA_ASSETS / "sounds.json").write_text(json.dumps(java_sounds, indent=2) + "\\n", encoding="utf-8")
+}, indent=2) + "\n", encoding="utf-8")
+(JAVA_ASSETS / "sounds.json").write_text(json.dumps(java_sounds, indent=2) + "\n", encoding="utf-8")
 
 # Bedrock pack: separate manifest and Bedrock sound_definitions format.
 (BEDROCK / "manifest.json").write_text(json.dumps({
@@ -73,11 +73,11 @@ for track_id, source in sorted(tracks.items()):
         "uuid": "8fcb22a4-82f7-4b3f-9c7b-bd251d5e24a1",
         "version": [1, 0, 1]
     }]
-}, indent=2) + "\\n", encoding="utf-8")
+}, indent=2) + "\n", encoding="utf-8")
 (BEDROCK_SOUNDS / "sound_definitions.json").write_text(json.dumps({
     "format_version": "1.14.0",
     "sound_definitions": bedrock_sounds
-}, indent=2) + "\\n", encoding="utf-8")
+}, indent=2) + "\n", encoding="utf-8")
 
 TARGET.mkdir(parents=True, exist_ok=True)
 for folder, output in ((JAVA, TARGET / "Music-Java-Resource-Pack.zip"),
