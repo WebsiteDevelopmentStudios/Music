@@ -1,0 +1,8 @@
+{
+  "music.placeholder": {
+    "category": "record",
+    "sounds": [
+      { "name": "blemmsmusic:music/placeholder", "stream": true }
+    ]
+  }
+}
