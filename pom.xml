@@ -12,7 +12,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId><artifactId>exec-maven-plugin</artifactId><version>3.5.1</version>
         <executions><execution><id>generate-java-and-bedrock-packs</id><phase>package</phase><goals><goal>exec</goal></goals>
-          <configuration><executable>python3</executable><arguments><argument>build_packs.py</argument></arguments></configuration>
+          <configuration><executable>python</executable><arguments><argument>build_packs.py</argument></arguments></configuration>
         </execution></executions>
       </plugin>
     </plugins>
