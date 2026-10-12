@@ -24,7 +24,7 @@ MUSIC_SOURCE_DIR="/path/to/server/plugins/Music/music" mvn clean package
 
 Windows PowerShell:
 ```powershell
-$env:MUSIC_SOURCE_DIR = "C:\\path\\to\\server\\plugins\\Music\\music"
+$env:MUSIC_SOURCE_DIR = "C:/path/to/server/plugins/Music/music"
 mvn clean package
 ```
 
