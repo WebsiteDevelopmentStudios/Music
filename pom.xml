@@ -4,8 +4,17 @@
   <properties><maven.compiler.release>25</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties>
   <repositories><repository><id>papermc</id><url>https://repo.papermc.io/repository/maven-public/</url></repository></repositories>
   <dependencies><dependency><groupId>io.papermc.paper</groupId><artifactId>paper-api</artifactId><version>26.2.build.132-stable</version><scope>provided</scope></dependency></dependencies>
-  <build><finalName>Music</finalName><resources><resource><directory>src/main/resources</directory><filtering>false</filtering></resource></resources><plugins>
-  <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.14.1</version><configuration><release>25</release></configuration></plugin>
-  <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-antrun-plugin</artifactId><version>3.1.0</version><executions><execution><id>package-resource-packs</id><phase>package</phase><goals><goal>run</goal></goals><configuration><target><mkdir dir="${project.build.directory}/Music-Java-Resource-Pack/assets/blemmsmusic/sounds/music"/><mkdir dir="${project.build.directory}/Music-Geyser.mcpack/assets/blemmsmusic/sounds/music"/><copy todir="${project.build.directory}/Music-Java-Resource-Pack"><fileset dir="src/pack"/></copy><copy todir="${project.build.directory}/Music-Geyser.mcpack"><fileset dir="src/pack"/></copy><zip destfile="${project.build.directory}/Music-Java-Resource-Pack.zip" basedir="${project.build.directory}/Music-Java-Resource-Pack"/><zip destfile="${project.build.directory}/Music-Geyser.mcpack" basedir="${project.build.directory}/Music-Geyser.mcpack"/></target></configuration></execution></executions></plugin>
-  </plugins></build>
+  <build>
+    <finalName>Music</finalName>
+    <resources><resource><directory>src/main/resources</directory><filtering>false</filtering></resource></resources>
+    <plugins>
+      <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.14.1</version><configuration><release>25</release></configuration></plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId><artifactId>exec-maven-plugin</artifactId><version>3.5.1</version>
+        <executions><execution><id>generate-java-and-bedrock-packs</id><phase>package</phase><goals><goal>exec</goal></goals>
+          <configuration><executable>python3</executable><arguments><argument>build_packs.py</argument></arguments></configuration>
+        </execution></executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
