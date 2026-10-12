@@ -12,6 +12,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,7 +38,62 @@ public final class MusicPlugin extends JavaPlugin implements TabExecutor {
         Objects.requireNonNull(getCommand("music")).setExecutor(this);
         Objects.requireNonNull(getCommand("music")).setTabCompleter(this);
         scanTracks();
+        generateResourcePacks();
         getLogger().info("Music enabled; found " + tracks.size() + " .ogg track(s).");
+    }
+
+
+    private void generateResourcePacks() {
+        File musicFolder = new File(getDataFolder(), "music");
+        try {
+            File javaZip = new File(getDataFolder(), "Music-Java-Resource-Pack.zip");
+            try (ZipOutputStream zip = new ZipOutputStream(Files.newOutputStream(javaZip.toPath()))) {
+                putText(zip, "pack.mcmeta", "{\"pack\":{\"pack_format\":75,\"description\":\"Music tracks (10 block range)\"}}");
+                StringBuilder sounds = new StringBuilder("{");
+                boolean first = true;
+                for (Map.Entry<String, String> entry : tracks.entrySet()) {
+                    String id = entry.getKey().toLowerCase(Locale.ROOT);
+                    if (!first) sounds.append(',');
+                    first = false;
+                    sounds.append("\"music.").append(id).append("\":{\"category\":\"record\",\"sounds\":[{\"name\":\"blemmsmusic:music/")
+                        .append(id).append("\",\"stream\":true,\"attenuation_distance\":10}]}");
+                    putBytes(zip, "assets/blemmsmusic/sounds/music/" + id + ".ogg",
+                        Files.readAllBytes(new File(musicFolder, entry.getValue()).toPath()));
+                }
+                sounds.append('}');
+                putText(zip, "assets/blemmsmusic/sounds.json", sounds.toString());
+            }
+
+            File bedrockPack = new File(getDataFolder(), "Music-Geyser.mcpack");
+            try (ZipOutputStream zip = new ZipOutputStream(Files.newOutputStream(bedrockPack.toPath()))) {
+                putText(zip, "manifest.json", "{\"format_version\":2,\"header\":{\"name\":\"Music Plugin Tracks\",\"description\":\"Custom tracks\",\"uuid\":\"d4cbeef0-3a20-4a12-96ab-6d2ef56f4d11\",\"version\":[1,0,1],\"min_engine_version\":[1,20,0]},\"modules\":[{\"type\":\"resources\",\"uuid\":\"8fcb22a4-82f7-4b3f-9c7b-bd251d5e24a1\",\"version\":[1,0,1]}]}");
+                StringBuilder definitions = new StringBuilder("{\"format_version\":\"1.14.0\",\"sound_definitions\":{");
+                boolean first = true;
+                for (Map.Entry<String, String> entry : tracks.entrySet()) {
+                    String id = entry.getKey().toLowerCase(Locale.ROOT);
+                    if (!first) definitions.append(',');
+                    first = false;
+                    definitions.append("\"music.").append(id).append("\":{\"category\":\"record\",\"max_distance\":10,\"sounds\":[{\"name\":\"sounds/music/")
+                        .append(id).append("\",\"stream\":true}]}");
+                    putBytes(zip, "sounds/music/" + id + ".ogg",
+                        Files.readAllBytes(new File(musicFolder, entry.getValue()).toPath()));
+                }
+                definitions.append("}}");
+                putText(zip, "sounds/sound_definitions.json", definitions.toString());
+            }
+        } catch (IOException ex) {
+            getLogger().warning("Could not generate resource packs: " + ex.getMessage());
+        }
+    }
+
+    private void putText(ZipOutputStream zip, String name, String value) throws IOException {
+        putBytes(zip, name, value.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private void putBytes(ZipOutputStream zip, String name, byte[] bytes) throws IOException {
+        zip.putNextEntry(new ZipEntry(name));
+        zip.write(bytes);
+        zip.closeEntry();
     }
 
     private void scanTracks() {
@@ -125,8 +185,8 @@ public final class MusicPlugin extends JavaPlugin implements TabExecutor {
             }
             case "reload" -> {
                 if (!admin(sender)) return true;
-                reloadConfig(); scanTracks();
-                sender.sendMessage(PREFIX + "Reloaded config and found " + tracks.size() + " track(s).");
+                reloadConfig(); scanTracks(); generateResourcePacks();
+                sender.sendMessage(PREFIX + "Reloaded config, found " + tracks.size() + " track(s), and exported resource packs to plugins/Music/.");
                 return true;
             }
             case "admin" -> {
