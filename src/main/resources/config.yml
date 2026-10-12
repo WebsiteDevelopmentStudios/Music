@@ -1,5 +1,5 @@
-# Place .ogg audio files in plugins/Music/music/
-# An .obb is an Android expansion archive, not an audio format; extract supported .ogg tracks first.
+# Put OGG tracks in plugins/Music/music/
+# Sound attenuation is configured to target a 10-block audible range.
 volume: 1.0
 # Additional multiplier for custom sound volume.
 sound-volume: 1.0
