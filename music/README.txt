@@ -1,0 +1,1 @@
+Place the .ogg tracks you want embedded in the generated Java and Bedrock resource packs in this folder, then run mvn clean package. You can also set MUSIC_SOURCE_DIR to point at plugins/Music/music. Filenames may contain letters, numbers, underscores, and hyphens only.
