@@ -1,6 +1,6 @@
 # Music
 
-Paper 26.2 music plugin with Maven-generated Java and Bedrock resource packs.
+Paper 26.2 custom music plugin with Maven-generated Java and Bedrock resource packs.
 
 ## Build
 
@@ -12,12 +12,10 @@ mvn -U clean package
 
 Build outputs in `target/`:
 - `Music.jar` — Paper plugin
-- `Music-Java-Resource-Pack.zip` — Java resource pack
-- `Music-Geyser.mcpack` — Bedrock resource pack archive
+- `Music-Java-Resource-Pack.zip` — Java resource-pack archive
+- `Music-Geyser.mcpack` — Bedrock resource-pack archive
 
-### Include your OGG tracks in the packs
-
-Before building, put the `.ogg` files in the repository's `music/` folder. Alternatively, point the generator at the server plugin's music folder:
+To embed tracks in the build artifacts, put the `.ogg` files in the repository's `music/` folder first. You can instead point the generator at a server music folder.
 
 Linux:
 ```sh
@@ -30,26 +28,26 @@ $env:MUSIC_SOURCE_DIR = "C:\\path\\to\\server\\plugins\\Music\\music"
 mvn clean package
 ```
 
-The build generates a sound event and copies each supported OGG into both pack layouts. Track filenames should use only letters, numbers, underscores, and hyphens. If you do not provide OGG files, valid pack archives are still produced but contain no tracks.
+Filenames may contain only letters, numbers, underscores, and hyphens. If no OGG files are supplied during the build, valid pack archives are still generated without track audio.
 
-## Install
+## Install and import tracks
 
 1. Put `Music.jar` in the Paper server's `plugins` folder and restart.
-2. Import audio as `.ogg` files into `plugins/Music/music/`.
-3. Run `/music reload` to rescan tracks.
-4. Build packs with those same OGG files, then distribute the Java ZIP through your server resource-pack setup. Import the MCPACK for Bedrock testing.
+2. Put `.ogg` files in `plugins/Music/music/`.
+3. Run `/music reload`. This rescans tracks and exports current packs to `plugins/Music/Music-Java-Resource-Pack.zip` and `plugins/Music/Music-Geyser.mcpack`.
+4. Distribute the Java pack through your server's resource-pack setup. Import the MCPACK to test on Bedrock clients.
 
-The plugin does not automatically upload resource packs or install them on clients. Geyser's handling of custom Java sound events depends on your Geyser setup and version; test the generated Bedrock pack with actual Bedrock clients.
+The plugin broadcasts music from the target player's location, so players nearby can hear it. Java sound definitions set a 10-block attenuation distance; the sound fades with distance and is intended to be inaudible at 10 blocks. Actual attenuation can vary by client/resource-pack version.
 
-## Playback and commands
+The plugin generates the pack files but does not host or automatically deliver them to clients. Geyser support for custom sound events depends on your Geyser version/configuration; test with an actual Bedrock client before relying on it.
+
+## Commands
 
 - `/music list`
 - `/music play <track> [player]`
 - `/music stop [player]`
 - `/music reload`
 - `/music admin`
-- `/music disable <world>` (toggle music commands in a world)
+- `/music disable <world>` (toggle a world on/off)
 
-Music is played at the target player's location to nearby players. The generated Java sound definitions set a 10-block attenuation distance; the sound fades with distance and is intended to be inaudible at 10 blocks. Actual attenuation can vary with the client and resource-pack format. `volume` and `sound-volume` in config.yml control the playback volume.
-
-Permissions: `music.use`, `music.admin`.
+Configuration: `volume`, `sound-volume`, `banned-players`, and `disabled-worlds`. Permissions: `music.use`, `music.admin`.
