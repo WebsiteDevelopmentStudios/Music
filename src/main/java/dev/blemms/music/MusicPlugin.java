@@ -178,7 +178,13 @@ public final class MusicPlugin extends JavaPlugin implements TabExecutor {
                 } else if (sender instanceof Player p) {
                     if (!allowed(p)) return true; target = p;
                 } else { sender.sendMessage(PREFIX + "Console usage: /music stop <player>"); return true; }
-                for (Player nearby : target.getWorld().getPlayers()) {\n                    if (nearby.getLocation().distanceSquared(target.getLocation()) <= 100.0) {\n                        for (String name : tracks.keySet()) nearby.stopSound("blemmsmusic:music." + name.toLowerCase(Locale.ROOT), SoundCategory.RECORDS);\n                    }\n                }
+                for (Player nearby : target.getWorld().getPlayers()) {
+                    if (nearby.getLocation().distanceSquared(target.getLocation()) <= 100.0) {
+                        for (String name : tracks.keySet()) {
+                            nearby.stopSound("blemmsmusic:music." + name.toLowerCase(Locale.ROOT), SoundCategory.RECORDS);
+                        }
+                    }
+                }
                 target.sendMessage(PREFIX + "Stopped custom music.");
                 if (sender != target) sender.sendMessage(PREFIX + "Stopped music for " + target.getName() + ".");
                 return true;
